@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Шешков](https://up.htmlacademy.ru/javascript/14/user/376289).
-* Наставник: `Неизвестно`.
+* Наставник: [Роман Мисюрин](https://htmlacademy.ru/profile/lunaticus).
 
 ---
 
