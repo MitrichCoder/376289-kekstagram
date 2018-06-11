@@ -1,12 +1,12 @@
 'use strict';
 
 // данные для массива фотографий
-var PHOTOS = []; // массив объектов, описывающих фотографии
-var photosQuantity = 25; // общее количество фотографий
-var minLikes = 15; // минимальное количество лайков
-var maxLikes = 200; // максимальное количество лайков
-var commentSentences = 2; // максимальное количество предложений в одном комментарии
-var comentsQuantity = 10; // количество комментариев к фотографии
+var photosArray = []; // массив объектов, описывающих фотографии
+var PHOTOS_QUANTITY = 25; // общее количество фотографий
+var MIN_LIKES = 15; // минимальное количество лайков
+var MAX_LIKES = 200; // максимальное количество лайков
+var COMMENT_SENTENCES = 2; // максимальное количество предложений в одном комментарии
+var COMMENTS_QUANTITY = 10; // количество комментариев к фотографии
 var userComments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var photoDiscription = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья.\nНе обижайте всех словами......', 'Вот это тачка!'];
 
@@ -14,7 +14,7 @@ var photoDiscription = ['Тестим новую камеру!', 'Затусил
 var createArray = function (min, max) {
   var arr = [];
 
-  for (var i = min; i < max + 1; i += 1) {
+  for (var i = min; i <= max; i++) {
     arr.push(i);
   }
 
@@ -23,25 +23,22 @@ var createArray = function (min, max) {
 
 // случайное число в заданном диапазоне (от...до, включительно)
 var randomInteger = function (min, max) {
-  var rand = min - 0.5 + Math.random() * (max - min + 1);
-  rand = Math.round(rand);
-  return rand;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 // получение случайного элемента массива
 var getRandomElement = function (arr) {
-  var arrElement = Math.floor(Math.random() * arr.length);
-  return arr[arrElement];
+  return arr[Math.floor(Math.random() * arr.length)];
 };
 
 // случайное true или false
 var trueOrFalse = function () {
-  return (Math.floor(Math.random() * 2) === 0);
+  return Math.random() < 0.5;
 };
 
 // ГЕНЕРАЦИЯ МАССИВА ОБЪЕКТОВ, ОПИСЫВАЮЩИХ ФОТОГРАФИИ
 // массив номеров фотографий в случайном порядке (для url фотографий)
-var photosNumber = createArray(1, photosQuantity).sort(function () {
+var photosNumber = createArray(1, PHOTOS_QUANTITY).sort(function () {
   return Math.random() - 0.5;
 });
 
@@ -49,14 +46,14 @@ var photosNumber = createArray(1, photosQuantity).sort(function () {
 var createComment = function () {
   var comment = '';
 
-  if (trueOrFalse() === true) {
+  if (trueOrFalse()) {
     // формируем одно предложение комментария
     comment = getRandomElement(userComments);
   } else {
     // формируем два или более предложений комментария
-    var max = randomInteger(2, commentSentences);
+    var max = randomInteger(2, COMMENT_SENTENCES) - 1;
 
-    for (var i = 0; i < max - 1; i += 1) {
+    for (var i = 0; i < max; i++) {
       comment = comment + getRandomElement(userComments) + ' ';
     }
 
@@ -70,7 +67,7 @@ var createComment = function () {
 // создание массива комментариев к фотографии (количество комментариев от 5 до 10)
 var createComments = function () {
   var comments = [];
-  var max = randomInteger(5, comentsQuantity);
+  var max = randomInteger(5, COMMENTS_QUANTITY);
 
   for (var i = 0; i < max; i += 1) {
     comments.push(createComment());
@@ -80,15 +77,15 @@ var createComments = function () {
 };
 
 // генерация массива объектов, описывающих фотографии
-for (var i = 0; i < photosQuantity; i++) {
+for (var i = 0; i < PHOTOS_QUANTITY; i++) {
   var newPhoto = {
     url: 'photos/' + photosNumber[i] + '.jpg',
-    likes: randomInteger(minLikes, maxLikes),
+    likes: randomInteger(MIN_LIKES, MAX_LIKES),
     comments: createComments(),
     description: getRandomElement(photoDiscription)
   };
 
-  PHOTOS.push(newPhoto);
+  photosArray.push(newPhoto);
 }
 
 // работа с DOM
@@ -103,9 +100,9 @@ var fragment = document.createDocumentFragment();
 var bigPictureBlock = document.querySelector('.big-picture');
 bigPictureBlock.classList.remove('hidden');
 
-bigPictureBlock.querySelector('.big-picture__img').getElementsByTagName('img')[0].src = PHOTOS[0].url;
-bigPictureBlock.querySelector('.likes-count').textContent = PHOTOS[0].likes;
-bigPictureBlock.querySelector('.comments-count').textContent = PHOTOS[0].comments.length;
+bigPictureBlock.querySelector('.big-picture__img').getElementsByTagName('img')[0].src = photosArray[0].url;
+bigPictureBlock.querySelector('.likes-count').textContent = photosArray[0].likes;
+bigPictureBlock.querySelector('.comments-count').textContent = photosArray[0].comments.length;
 bigPictureBlock.querySelector('.social__caption').textContent = getRandomElement(photoDiscription);
 
 // формирование DOM-элемента соответствующей фотографии и наполенение его данными
@@ -120,8 +117,8 @@ var renderPictureElement = function (element) {
 };
 
 // DOM-элементы в блок .pictures
-for (i = 0; i < PHOTOS.length; i += 1) {
-  fragment.appendChild(renderPictureElement(PHOTOS[i]));
+for (i = 0; i < photosArray.length; i += 1) {
+  fragment.appendChild(renderPictureElement(photosArray[i]));
 }
 
 pictureBlock.appendChild(fragment);
@@ -140,13 +137,12 @@ var renderCommentElement = function (element) {
 // DOM-элементы в блок .social__comment (чистим содержимое и вставляем 2 первых комментария к фотографии)
 commentsBlock.innerHTML = '';
 
-for (i = 0; i < 2; i += 1) { // оставил всё таки 2 комента, т.к. ниже блок "5 из ... комментариев вообще прячется..."
-  fragment.appendChild(renderCommentElement(PHOTOS[0].comments[i]));
+for (i = 0; i < 2; i += 1) {
+  fragment.appendChild(renderCommentElement(photosArray[0].comments[i]));
 }
 
 commentsBlock.appendChild(fragment);
 
 // прячем блоки счётчика комментариев и загрузки новых комментариев
-// не нашёл в разметке блока с классом .social__comment-loadmore, есть только .social__loadmore (наверное, ошибка в ТЗ)
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.social__loadmore').classList.add('visually-hidden');
