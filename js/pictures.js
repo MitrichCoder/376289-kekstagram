@@ -7,8 +7,8 @@ var MIN_LIKES = 15; // минимальное количество лайков
 var MAX_LIKES = 200; // максимальное количество лайков
 var COMMENT_SENTENCES = 2; // максимальное количество предложений в одном комментарии
 var COMMENTS_QUANTITY = 10; // количество комментариев к фотографии
-var userComments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
-var photoDiscription = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья.\nНе обижайте всех словами......', 'Вот это тачка!'];
+var USER_COMMENTS = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
+var PHOTO_DISCRIPTION = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья.\nНе обижайте всех словами......', 'Вот это тачка!'];
 
 // формирование массива целых чисел в заданном диапазоне (от...до, включительно)
 var createArray = function (min, max) {
@@ -48,17 +48,17 @@ var createComment = function () {
 
   if (trueOrFalse()) {
     // формируем одно предложение комментария
-    comment = getRandomElement(userComments);
+    comment = getRandomElement(USER_COMMENTS);
   } else {
     // формируем два или более предложений комментария
     var max = randomInteger(2, COMMENT_SENTENCES) - 1;
 
     for (var i = 0; i < max; i++) {
-      comment = comment + getRandomElement(userComments) + ' ';
+      comment = comment + getRandomElement(USER_COMMENTS) + ' ';
     }
 
     // крайнее предложение комментария
-    comment = comment + getRandomElement(userComments);
+    comment = comment + getRandomElement(USER_COMMENTS);
   }
 
   return comment;
@@ -82,7 +82,7 @@ for (var i = 0; i < PHOTOS_QUANTITY; i++) {
     url: 'photos/' + photosNumber[i] + '.jpg',
     likes: randomInteger(MIN_LIKES, MAX_LIKES),
     comments: createComments(),
-    description: getRandomElement(photoDiscription)
+    description: getRandomElement(PHOTO_DISCRIPTION)
   };
 
   photosArray.push(newPhoto);
@@ -103,7 +103,7 @@ bigPictureBlock.classList.remove('hidden');
 bigPictureBlock.querySelector('.big-picture__img').getElementsByTagName('img')[0].src = photosArray[0].url;
 bigPictureBlock.querySelector('.likes-count').textContent = photosArray[0].likes;
 bigPictureBlock.querySelector('.comments-count').textContent = photosArray[0].comments.length;
-bigPictureBlock.querySelector('.social__caption').textContent = getRandomElement(photoDiscription);
+bigPictureBlock.querySelector('.social__caption').textContent = getRandomElement(PHOTO_DISCRIPTION);
 
 // формирование DOM-элемента соответствующей фотографии и наполенение его данными
 var renderPictureElement = function (element) {
