@@ -212,9 +212,7 @@ var closeBigPicture = function () {
 var pictureClickHendler = function (evt) {
   evt.preventDefault();
 
-  var self = this.getAttribute('src'); // вот этот this не нравится линтеру
-
-  // console.log(self);
+  var self = evt.target.getAttribute('src');
 
   openBigPicture(self);
 };
