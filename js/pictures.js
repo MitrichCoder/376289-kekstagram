@@ -262,10 +262,15 @@ var effects = {
   }
 };
 
-// открытие и закрытие редактора фотографии
+var textHashtags = document.querySelector('.text__hashtags');
+var textDescription = document.querySelector('.text__description');
+
+// открытие и закрытие редактора фотографии (если поля ввода хэштега или комментария не в фокусе)
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    closeImageEditor();
+  if (evt.keyCode === ESC_KEYCODE && document.activeElement !== textHashtags) {
+    if (evt.keyCode === ESC_KEYCODE && document.activeElement !== textDescription) {
+      closeImageEditor();
+    }
   }
 };
 
@@ -361,7 +366,7 @@ scalePin.addEventListener('mousedown', function (evt) {
     var shift = startX - moveEvt.clientX;
     startX = moveEvt.clientX;
 
-    var pinPosition = (scalePin.offsetLeft - shift) * 100 / SCALE_WIDTH; // пиксели в проценты
+    var pinPosition = Math.round((scalePin.offsetLeft - shift) * 100 / SCALE_WIDTH); // пиксели в проценты
     setPinPosition(pinPosition); // вызов функции установки положения пина и линии прогресса
     changeEffectLevel(pinPosition);
   };
@@ -408,3 +413,167 @@ var btnMinusClickHendler = function () {
 setResize(RESIZE_MAX);
 resizePlus.addEventListener('click', btnPlusClickHendler);
 resizeMinus.addEventListener('click', btnMinusClickHendler);
+
+// ВАЛИДАЦИЯ ФОРМЫ
+var photoEditForm = document.querySelector('#upload-select-image'); // форма
+var fieldHashtag = photoEditForm.querySelector('.text__hashtags'); // поле для хэш-тегов
+// var fieldDiscription = photoEditForm.querySelector('.text__description'); // поле для комментария к фотографии
+
+// подстановка и сброс ошибки невалидного поля
+var setError = function (field, message) {
+  field.setCustomValidity(message);
+  field.style.cssText = 'box-shadow: 0 0 3pt 2px red;';
+};
+
+var resetError = function (evt) {
+  evt.target.setCustomValidity('');
+  evt.target.style.cssText = '';
+};
+
+// проверяем валидность хэш-тегов
+var validateHashtag = function () {
+
+  // поле необязательное, поэтому, если оно пустое, делаем отправку формы
+  if (!fieldHashtag.value.length) {
+    return true;
+  }
+
+  var errorMessage = '';
+  var hashtag = fieldHashtag.value.trim(); // с удалением пробелов в начале и в конце
+
+  // делим значение поля с хэш-тегами на отдельные элементы (по пробелу)
+  var hashTagArray = hashtag.split(' ');
+
+  // количество решёток в хэш-теге
+  var countHashtags = function (stringArray) {
+    var count = 0;
+
+    for (var j = 0; j < stringArray.length; j++) {
+      if (stringArray[j] === '#') {
+        count++;
+      }
+    }
+
+    return count;
+  };
+
+  // количество хэш-тегов без решёток
+  var countEmpty = function (array) {
+    var count = 0;
+
+    for (i = 0; i < array.length; i++) {
+      if (countHashtags(array[i]) === 0) {
+        count++;
+      }
+    }
+
+    return count;
+  };
+
+  // количество хэш-тегов без решёток в начале
+  var countBeginEmpty = function (array) {
+    var count = 0;
+
+    for (i = 0; i < array.length; i++) {
+      if (array[i][0] !== '#') {
+        count++;
+      }
+    }
+
+    return count;
+  };
+
+  // количество хэш-тегов, состоящих из одной решётки
+  var countOnlyHash = function (array) {
+    var count = 0;
+
+    for (i = 0; i < array.length; i++) {
+      if (array[i].length === 1 && array[i] === '#') {
+        count++;
+      }
+    }
+
+    return count;
+  };
+
+  // количество хэш-тегов с лишними решётками
+  var countTooMuch = function (array) {
+    var count = 0;
+
+    for (i = 0; i < array.length; i++) {
+      if (countHashtags(array[i]) > 1) {
+        count++;
+      }
+    }
+
+    return count;
+  };
+
+  // поиск неуникальных элементов в массиве
+  var findNotUnique = function (array) {
+    var result = [];
+
+    for (i = 0; i < array.length; i++) {
+      var elem = array[i];
+
+      for (var j = 0; j < result.length; j++) {
+        if (elem === result[j]) {
+          return true;
+        }
+      }
+
+      result.push(elem);
+    }
+
+    return false;
+  };
+
+  // проверяем есть ли решётки в хэш-тегах
+  if (countEmpty(hashTagArray) > 0) {
+    errorMessage += 'Хэш-теги должны содержать символ решётки! ';
+  }
+
+  // проверяем каждый хэш-тег на наличие в его начале решётки
+  if (countBeginEmpty(hashTagArray) > 0) {
+    errorMessage += 'Решётка должна быть в начале хэш-тега! ';
+  }
+
+  // проверяем каждый хэш-тег на отсутствие в нём лишних решёток (кроме первой)
+  if (countTooMuch(hashTagArray) > 0) {
+    errorMessage += 'В хэш-тегах не должно быть больше одной решётки, или они должны быть разделены пробелами! ';
+  }
+
+  // поиск одинаковых хэш-тегов
+  if (findNotUnique(hashTagArray)) {
+    errorMessage += 'Хэш-теги не должны повторяться! ';
+  }
+
+  // поиск одинаковых хэш-тегов
+  if (hashTagArray.length > 5) {
+    errorMessage += 'Количество хэш-тэгов не может быть более пяти! ';
+  }
+
+  // проверяем есть ли тхэш-теги, состоящие только из одной решётки
+  if (countOnlyHash(hashTagArray) > 0) {
+    errorMessage += 'Хэш-тег не может быть только из одной решётки! ';
+  }
+
+  // if (errorMessage.length > 0) {
+  //   setError(fieldHashtag, errorMessage);
+  // } else {
+  //   return true;
+  // }
+
+  return errorMessage.length > 0 ? setError(fieldHashtag, errorMessage) : true;
+};
+
+var sabmitClickHandler = function (evt) {
+  evt.preventDefault();
+
+  if (validateHashtag()) {
+    photoEditForm.submit();
+  }
+};
+
+photoEditForm.addEventListener('submit', sabmitClickHandler);
+fieldHashtag.addEventListener('input', resetError);
