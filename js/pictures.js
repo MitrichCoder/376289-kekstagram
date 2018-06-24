@@ -265,13 +265,32 @@ var effects = {
 var textHashtags = document.querySelector('.text__hashtags');
 var textDescription = document.querySelector('.text__description');
 
-// открытие и закрытие редактора фотографии (если поля ввода хэштега или комментария не в фокусе)
+// открытие и закрытие редактора фотографии (если поля ввода хэштега или комментария в фокусе)
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE && document.activeElement !== textHashtags) {
-    if (evt.keyCode === ESC_KEYCODE && document.activeElement !== textDescription) {
+  // позже сделаю без переменных
+  var condition1 = evt.keyCode === ESC_KEYCODE;
+  var condition2 = document.activeElement === textHashtags
+  var condition3 = document.activeElement === textDescription
+
+  // console.log('нажата esc ' + condition1);
+  // console.log('поле хэш-тега в фокусе ' + condition2);
+  // console.log('поле коммента в фокусе ' + condition3);
+
+  // if ((evt.keyCode === ESC_KEYCODE) && (document.activeElement !== textHashtags)) {
+  //   if ((evt.keyCode === ESC_KEYCODE) && (document.activeElement !== textDescription)) {
+  //     closeImageEditor();
+  //   }
+  // }
+
+  if (condition1 && !condition2) {
+    if (condition1 && !condition3) {
       closeImageEditor();
     }
   }
+
+  // if (condition1 && (!condition2 || !condition3)) {
+  //   closeImageEditor();
+  // }
 };
 
 var openImageEditor = function () {
@@ -433,23 +452,33 @@ var resetError = function (evt) {
 // проверяем валидность хэш-тегов
 var validateHashtag = function () {
 
-  // поле необязательное, поэтому, если оно пустое, делаем отправку формы
+  // поле необязательное, поэтому, если оно пустое, сразу делаем отправку формы
   if (!fieldHashtag.value.length) {
     return true;
   }
 
+  var errorsObj = {}; // сюда "складываем" ошибки
   var errorMessage = '';
-  var hashtag = fieldHashtag.value.trim(); // с удалением пробелов в начале и в конце
 
-  // делим значение поля с хэш-тегами на отдельные элементы (по пробелу)
-  var hashTagArray = hashtag.split(' ');
+  var hashtag = fieldHashtag.value.trim().toLowerCase(); // избавляемся от пробелов в начале и в конце, приводим к одному регистру
+  var hashTagArray = hashtag.split(' '); // делим значение поля с хэш-тегами на отдельные элементы (по пробелу)
+
+  // ппроверка объекта на наличие свойств
+  var isEmptyObject = function (obj) {
+    for (var i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   // количество решёток в хэш-теге
   var countHashtags = function (stringArray) {
     var count = 0;
 
-    for (var j = 0; j < stringArray.length; j++) {
-      if (stringArray[j] === '#') {
+    for (var i = 0; i < stringArray.length; i++) {
+      if (stringArray[i] === '#') {
         count++;
       }
     }
@@ -457,112 +486,60 @@ var validateHashtag = function () {
     return count;
   };
 
-  // количество хэш-тегов без решёток
-  var countEmpty = function (array) {
-    var count = 0;
-
-    for (i = 0; i < array.length; i++) {
-      if (countHashtags(array[i]) === 0) {
-        count++;
-      }
-    }
-
-    return count;
-  };
-
-  // количество хэш-тегов без решёток в начале
-  var countBeginEmpty = function (array) {
-    var count = 0;
-
-    for (i = 0; i < array.length; i++) {
-      if (array[i][0] !== '#') {
-        count++;
-      }
-    }
-
-    return count;
-  };
-
-  // количество хэш-тегов, состоящих из одной решётки
-  var countOnlyHash = function (array) {
-    var count = 0;
-
-    for (i = 0; i < array.length; i++) {
-      if (array[i].length === 1 && array[i] === '#') {
-        count++;
-      }
-    }
-
-    return count;
-  };
-
-  // количество хэш-тегов с лишними решётками
-  var countTooMuch = function (array) {
-    var count = 0;
-
-    for (i = 0; i < array.length; i++) {
-      if (countHashtags(array[i]) > 1) {
-        count++;
-      }
-    }
-
-    return count;
-  };
-
-  // поиск неуникальных элементов в массиве
+  // поиск одинаковых элементов в массиве
   var findNotUnique = function (array) {
-    var result = [];
+    var object = {};
 
     for (i = 0; i < array.length; i++) {
-      var elem = array[i];
+      var str = array[i];
 
-      for (var j = 0; j < result.length; j++) {
-        if (elem === result[j]) {
-          return true;
-        }
+      if (object[str] === undefined) {
+        object[str] = true;
+      } else {
+        return true;
       }
-
-      result.push(elem);
     }
 
     return false;
   };
 
-  // проверяем есть ли решётки в хэш-тегах
-  if (countEmpty(hashTagArray) > 0) {
-    errorMessage += 'Хэш-теги должны содержать символ решётки! ';
-  }
-
-  // проверяем каждый хэш-тег на наличие в его начале решётки
-  if (countBeginEmpty(hashTagArray) > 0) {
-    errorMessage += 'Решётка должна быть в начале хэш-тега! ';
-  }
-
-  // проверяем каждый хэш-тег на отсутствие в нём лишних решёток (кроме первой)
-  if (countTooMuch(hashTagArray) > 0) {
-    errorMessage += 'В хэш-тегах не должно быть больше одной решётки, или они должны быть разделены пробелами! ';
-  }
-
-  // поиск одинаковых хэш-тегов
-  if (findNotUnique(hashTagArray)) {
-    errorMessage += 'Хэш-теги не должны повторяться! ';
-  }
-
-  // поиск одинаковых хэш-тегов
+  // не больше ли 5 хэш-тегов?
   if (hashTagArray.length > 5) {
-    errorMessage += 'Количество хэш-тэгов не может быть более пяти! ';
+    errorsObj.error1 = 'Хэш-тегов больше пяти. ';
   }
 
-  // проверяем есть ли тхэш-теги, состоящие только из одной решётки
-  if (countOnlyHash(hashTagArray) > 0) {
-    errorMessage += 'Хэш-тег не может быть только из одной решётки! ';
+  // есть ли одинаковые хэщтеги?
+  if (findNotUnique(hashTagArray)) {
+    errorsObj.error2 = 'Есть одинаковые хэш-теги. ';
   }
 
-  // if (errorMessage.length > 0) {
-  //   setError(fieldHashtag, errorMessage);
-  // } else {
-  //   return true;
-  // }
+  // проверяем каждый хэш-тег
+  for (i = 0; i < hashTagArray.length; i++) {
+    // есть ли решётка в начале?
+    if (hashTagArray[i][0] !== '#') {
+      errorsObj.error3 = 'Нет решётки в начале хэш-тега. ';
+    }
+
+    // не из одной ли решётки?
+    if (hashTagArray[i].length === 1 && hashTagArray[i][0] === '#') {
+      errorsObj.error4 = 'Хэш-тег состоит из одной решётки. ';
+    }
+
+    // не больше ли 20 знаков
+    if (hashTagArray[i].length > 20) {
+      errorsObj.error5 = 'Хэш-тег больше 20 знаков. ';
+    }
+
+    // разделяются ли хэш-теги пробелом?
+    if (countHashtags(hashTagArray[i]) > 1) {
+      errorsObj.error6 = 'Нет пробелов между хэш-тегами. ';
+    }
+  }
+
+  // формируем сообщение с ошибками
+  for (var key in errorsObj) {
+    errorMessage += errorsObj[key];
+  }
 
   return errorMessage.length > 0 ? setError(fieldHashtag, errorMessage) : true;
 };
