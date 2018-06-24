@@ -267,30 +267,9 @@ var textDescription = document.querySelector('.text__description');
 
 // открытие и закрытие редактора фотографии (если поля ввода хэштега или комментария в фокусе)
 var onPopupEscPress = function (evt) {
-  // позже сделаю без переменных
-  var condition1 = evt.keyCode === ESC_KEYCODE;
-  var condition2 = document.activeElement === textHashtags
-  var condition3 = document.activeElement === textDescription
-
-  // console.log('нажата esc ' + condition1);
-  // console.log('поле хэш-тега в фокусе ' + condition2);
-  // console.log('поле коммента в фокусе ' + condition3);
-
-  // if ((evt.keyCode === ESC_KEYCODE) && (document.activeElement !== textHashtags)) {
-  //   if ((evt.keyCode === ESC_KEYCODE) && (document.activeElement !== textDescription)) {
-  //     closeImageEditor();
-  //   }
-  // }
-
-  if (condition1 && !condition2) {
-    if (condition1 && !condition3) {
-      closeImageEditor();
-    }
+  if ((evt.keyCode === ESC_KEYCODE) && (document.activeElement !== textHashtags) && (document.activeElement !== textDescription)) {
+    closeImageEditor();
   }
-
-  // if (condition1 && (!condition2 || !condition3)) {
-  //   closeImageEditor();
-  // }
 };
 
 var openImageEditor = function () {
@@ -463,21 +442,11 @@ var validateHashtag = function () {
   var hashtag = fieldHashtag.value.trim().toLowerCase(); // избавляемся от пробелов в начале и в конце, приводим к одному регистру
   var hashTagArray = hashtag.split(' '); // делим значение поля с хэш-тегами на отдельные элементы (по пробелу)
 
-  // ппроверка объекта на наличие свойств
-  var isEmptyObject = function (obj) {
-    for (var i in obj) {
-      if (obj.hasOwnProperty(i)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   // количество решёток в хэш-теге
   var countHashtags = function (stringArray) {
     var count = 0;
 
-    for (var i = 0; i < stringArray.length; i++) {
+    for (i = 0; i < stringArray.length; i++) {
       if (stringArray[i] === '#') {
         count++;
       }
@@ -538,7 +507,9 @@ var validateHashtag = function () {
 
   // формируем сообщение с ошибками
   for (var key in errorsObj) {
-    errorMessage += errorsObj[key];
+    if (errorsObj.hasOwnProperty(key)) {
+      errorMessage += errorsObj[key];
+    }
   }
 
   return errorMessage.length > 0 ? setError(fieldHashtag, errorMessage) : true;
