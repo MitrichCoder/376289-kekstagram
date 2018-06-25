@@ -273,6 +273,7 @@ var onPopupEscPress = function (evt) {
 };
 
 var openImageEditor = function () {
+  resetEffectLevel();
   imageEditor.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
 };
@@ -369,7 +370,7 @@ scalePin.addEventListener('mousedown', function (evt) {
     changeEffectLevel(pinPosition);
   };
 
-  // удаление слушетелей движения и отпускания после отпускания миши
+  // удаление слушетелей движения и отпускания после отпускания мыши
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
 
@@ -446,8 +447,8 @@ var validateHashtag = function () {
   var countHashtags = function (stringArray) {
     var count = 0;
 
-    for (i = 0; i < stringArray.length; i++) {
-      if (stringArray[i] === '#') {
+    for (var j = 0; j < stringArray.length; j++) {
+      if (stringArray[j] === '#') {
         count++;
       }
     }
