@@ -106,7 +106,6 @@
 
   fieldHashtag.addEventListener('input', resetError);
 
-
   var onSuccess = function () {
     window.form.closeImageEditor();
   };
