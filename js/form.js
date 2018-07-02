@@ -19,6 +19,9 @@
   var imgPreview = document.querySelector('.img-upload__preview').getElementsByTagName('img')[0];
   var effectButtons = document.querySelectorAll('.effects__radio');
 
+  var fieldHashtag = document.querySelector('.text__hashtags');
+  var fieldComment = document.querySelector('.text__description');
+
   // кнопки масштаба фотографии
   var resizeMinus = document.querySelector('.resize__control--minus');
   var resizePlus = document.querySelector('.resize__control--plus');
@@ -29,6 +32,16 @@
   var scalePin = document.querySelector('.scale__pin');
   var scaleLevel = document.querySelector('.scale__level');
   var scaleValue = document.querySelector('.scale__value');
+
+  window.form = {
+    closeImageEditor: function () {
+      imageEditor.classList.add('hidden');
+      uploadFile.value = '';
+      fieldHashtag.value = '';
+      fieldComment.value = '';
+      document.removeEventListener('keydown', onPopupEscPress);
+    }
+  };
 
   // текущее (начальное) значение эффекта input radio checked
   var effectValue = String(document.querySelector('input[name="effect"]:checked').getAttribute('value'));
@@ -69,7 +82,7 @@
   // открытие и закрытие редактора фотографии (если поля ввода хэштега или комментария в фокусе)
   var onPopupEscPress = function (evt) {
     if ((evt.keyCode === ESC_KEYCODE) && (document.activeElement !== textHashtags) && (document.activeElement !== textDescription)) {
-      closeImageEditor();
+      window.form.closeImageEditor();
     }
   };
 
@@ -77,12 +90,6 @@
     resetEffectLevel();
     imageEditor.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
-  };
-
-  var closeImageEditor = function () {
-    imageEditor.classList.add('hidden');
-    uploadFile.value = '';
-    document.removeEventListener('keydown', onPopupEscPress);
   };
 
   // установка положения пина и прогресс-линии
@@ -139,11 +146,11 @@
   };
 
   uploadFile.addEventListener('change', openImageEditor);
-  editorCloseBtn.addEventListener('click', closeImageEditor);
+  editorCloseBtn.addEventListener('click', window.form.closeImageEditor);
 
   changeEffectHendler();
 
-  // вешаем обработчик на все радиокнопки кроме первой (на ней слайдер закрывается)
+  // вешаем обработчик на все радиокнопки
   for (var i = 0; i < effectButtons.length; i++) {
     effectButtons[i].addEventListener('click', changeEffectHendler);
   }
@@ -192,7 +199,7 @@
   };
 
   // изменение масштаба
-  var btnPlusClickHendler = function () {
+  var btnPlusClickHandler = function () {
     if (resizeValue >= RESIZE_MAX) {
       return;
     }
@@ -201,7 +208,7 @@
     setResize(resizeValue);
   };
 
-  var btnMinusClickHendler = function () {
+  var btnMinusClickHandler = function () {
     if (resizeValue <= RESIZE_MIN) {
       return;
     }
@@ -211,6 +218,6 @@
   };
 
   setResize(RESIZE_MAX);
-  resizePlus.addEventListener('click', btnPlusClickHendler);
-  resizeMinus.addEventListener('click', btnMinusClickHendler);
+  resizePlus.addEventListener('click', btnPlusClickHandler);
+  resizeMinus.addEventListener('click', btnMinusClickHandler);
 })();
