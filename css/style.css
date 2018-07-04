@@ -1237,6 +1237,60 @@ main {
   background-position: 0 -105px;
 }
 
+/* error message */
+.error {
+  position: fixed;
+  width: 300px;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  padding: 40px 20px;
+  text-align: center;
+  color: #232321;
+
+  border-radius: 5px;
+  box-shadow: 0 10px 20px 0 rgba(4,6,6,.2), 0 20px 40px 0 rgba(4,6,6,.75);
+
+  background-color: #ffffff;
+  z-index: 500;
+}
+
+.error__icon {
+  width: 100px;
+  height: 100px;
+}
+
+.error__title {
+  font-size: 36px;
+}
+
+.error__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 170px;
+  height: 40px;
+  margin: 0 auto;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 20px;
+
+  background-color: #f15249;
+}
+
+.error__button:hover {
+  background-color: #ff645b;
+}
+
+.error-overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 400;
+}
 
 @media (min-width: 1024px) and (max-width: 1359px) {
   .container {

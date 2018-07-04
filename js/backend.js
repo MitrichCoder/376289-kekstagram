@@ -35,7 +35,12 @@
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
-        onLoad(xhr.response);
+        if (xhr.status === 200) {
+          onLoad(xhr.response);
+        } else {
+          document.querySelector('.img-upload__overlay').classList.add('hidden');
+          onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        }
       });
 
       xhr.addEventListener('error', function () {
