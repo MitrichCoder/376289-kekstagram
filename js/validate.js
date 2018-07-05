@@ -104,14 +104,17 @@
     return errorMessage.length > 0 ? setError(fieldHashtag, errorMessage) : true;
   };
 
-  var sabmitClickHandler = function (evt) {
+  fieldHashtag.addEventListener('input', resetError);
+
+  var onSuccess = function () {
+    window.form.closeImageEditor();
+  };
+
+  photoEditForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
 
     if (validateHashtag()) {
-      photoEditForm.submit();
+      window.backend.save(new FormData(photoEditForm), onSuccess, window.app.onError);
     }
-  };
-
-  photoEditForm.addEventListener('submit', sabmitClickHandler);
-  fieldHashtag.addEventListener('input', resetError);
+  });
 })();
