@@ -51,8 +51,19 @@
       // errorWindow.appendChild(errorOverlay);
 
       document.body.insertAdjacentElement('afterbegin', errorWindow);
-
       errorWindow.parentNode.insertBefore(errorOverlay, errorWindow.nextSibling);
+
+      var error = document.querySelector('.error__button');
+      var uploadFile = document.querySelector('#upload-file');
+
+      error.addEventListener('click', function (evt) {
+        evt.preventDefault();
+
+        document.body.removeChild(errorWindow);
+        document.body.removeChild(errorOverlay);
+
+        uploadFile.value = '';
+      });
     }
   };
 })();

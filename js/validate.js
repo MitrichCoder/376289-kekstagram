@@ -117,6 +117,4 @@
       window.backend.save(new FormData(photoEditForm), onSuccess, window.app.onError);
     }
   });
-
-
 })();
