@@ -25,7 +25,7 @@
       window.data.photosArray.push(testPhoto);
     }
 
-    window.pictures();
+    window.pictures(window.data.photosArray);
     window.preview();
   };
 

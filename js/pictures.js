@@ -2,9 +2,10 @@
 
 // ОТРИСОВКА МИНИАТЮР
 (function () {
-  window.pictures = function () {
+  window.pictures = function (renderArray) {
     // шаблоны пользовательских фотографий
     var pictureTemplate = document.querySelector('#picture').content;
+    var imgFilters = document.querySelector('.img-filters');
 
     // пользовательские фотографии
     var pictureBlock = document.querySelector('.pictures');
@@ -19,11 +20,12 @@
       return elementBlock;
     };
 
-    // 3. ОТРИСОВКА СОЗДАННЫХ DOM-ЭЛЕМЕНТОВ В БЛОК .pictures *******************************************************************
-    for (var i = 0; i < window.data.photosArray.length; i++) {
-      window.app.fragment.appendChild(renderPictureElement(window.data.photosArray[i]));
+    // отрисовка созданных DOM-элементов в блок .pictures
+    for (var i = 0; i < renderArray.length; i++) {
+      window.app.fragment.appendChild(renderPictureElement(renderArray[i]));
     }
 
     pictureBlock.appendChild(window.app.fragment);
+    imgFilters.classList.remove('img-filters--inactive');
   };
 })();
