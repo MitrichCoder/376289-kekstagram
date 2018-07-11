@@ -5,6 +5,7 @@
 
   window.preview = function () {
     var ESC_KEYCODE = 27;
+    var curentComents = 2;
 
     var body = document.getElementsByTagName('body')[0];
 
@@ -18,9 +19,13 @@
 
     // формируем данные для оверлея (element - "номер" объекта массива photoArray)
     var getBigPictureData = function (element) {
+
+      bigPictureBlock.querySelector('.social__comment-count').innerHTML = '<span class="comments-curent"></span> из <span class="comments-count"></span> комментариев';
+
       // url, количество лайков, количество комментариев, описание (случайное из списка)
       bigPictureBlock.querySelector('.big-picture__img').getElementsByTagName('img')[0].src = window.data.photosArray[element].url;
       bigPictureBlock.querySelector('.likes-count').textContent = window.data.photosArray[element].likes;
+      bigPictureBlock.querySelector('.comments-curent').textContent = curentComents;
       bigPictureBlock.querySelector('.comments-count').textContent = window.data.photosArray[element].comments.length;
       bigPictureBlock.querySelector('.social__caption').textContent = window.app.getRandomElement(window.data.PHOTO_DISCRIPTION);
 

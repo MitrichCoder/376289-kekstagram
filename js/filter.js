@@ -31,16 +31,14 @@
   };
 
   // фотографии в изначальном порядке
-  var popularClickHandler = function (evt) {
-    evt.preventDefault();
+  var popularClickHandler = window.debounce(function () {
 
     var popular = window.data.photosArray;
     reRenderPicture(popular);
-  };
+  });
 
   // 10 случайных, не повторяющихся фотографий
-  var newClickHandler = function (evt) {
-    evt.preventDefault();
+  var newClickHandler = window.debounce(function () {
 
     var news = [];
 
@@ -51,18 +49,17 @@
     }
 
     reRenderPicture(news);
-  };
+  });
 
   // сортировка по самым обсуждаемым фотографиям (в порядке их убывания)
-  var discussedClickHandler = function (evt) {
-    evt.preventDefault();
+  var discussedClickHandler = window.debounce(function () {
 
     var discussions = window.data.photosArray.slice().sort(function (less, more) {
       return more.comments.length - less.comments.length;
     });
 
     reRenderPicture(discussions);
-  };
+  });
 
   buttonPopular.addEventListener('click', popularClickHandler);
   buttonNew.addEventListener('click', newClickHandler);
