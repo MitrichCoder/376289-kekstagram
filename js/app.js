@@ -42,7 +42,7 @@
     },
 
     // случайное true или false
-    trueOrFalse: function () {
+    getTrueOrFalse: function () {
       return Math.random() < 0.5;
     },
 

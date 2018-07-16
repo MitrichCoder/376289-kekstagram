@@ -5,6 +5,7 @@
 
   window.preview = function () {
     var ESC_KEYCODE = 27;
+    var ENTER_KEYCODE = 13;
     var curentComents = 2;
 
     var body = document.getElementsByTagName('body')[0];
@@ -13,6 +14,7 @@
     var bigPictureBlock = document.querySelector('.big-picture');
     var commentsBlock = document.querySelector('.social__comments');
 
+    var imgLinks = document.querySelectorAll('.picture__link');
     var pictureImages = document.querySelectorAll('.picture__img'); // список фотогафий из блока .pictures
     var bigPictureClose = document.querySelector('.big-picture__cancel');
     var commentTemplate = document.querySelector('#comment').content; // шаблоны комментариев к фотографии
@@ -59,8 +61,8 @@
     // ОТКРЫТИЕ/ЗАКРЫТИЕ ОВЕРЛЕЯ .big-picture с соответстующей фотографией
     var openBigPicture = function (elem) {
       // получаем порядковый номер фотографии, по которой произошёл клик и присваиваем его arrayNum
-      for (var arrayNum = 0, max = pictureImages.length; arrayNum < max; arrayNum++) {
-        if (elem === pictureImages[arrayNum].getAttribute('src')) {
+      for (var arrayNum = 0; arrayNum < window.data.photosArray.length; arrayNum++) {
+        if (elem === window.data.photosArray[arrayNum].url) {
           break;
         }
       }
@@ -71,12 +73,9 @@
       // открываем оверлей
       bigPictureBlock.classList.remove('hidden');
       body.classList.add('modal-open');
-    };
 
-    var closeBigPicture = function (evt) {
-      if (evt.keyCode === ESC_KEYCODE) {
-        bigPictureCloseClickHandler();
-      }
+      bigPictureClose.addEventListener('click', bigPictureCloseClickHandler);
+      document.addEventListener('keydown', closeBigPicture);
     };
 
     var pictureClickHandler = function (evt) {
@@ -86,16 +85,34 @@
       openBigPicture(self);
     };
 
+    var openPreview = function (evt) {
+      if (evt.keyCode === ENTER_KEYCODE) {
+        evt.preventDefault();
+        var self = evt.target.getElementsByTagName('img')[0].getAttribute('src');
+        openBigPicture(self);
+      }
+    };
+
     var bigPictureCloseClickHandler = function () {
       bigPictureBlock.classList.add('hidden');
       body.classList.remove('modal-open');
+
+      bigPictureClose.removeEventListener('click', bigPictureCloseClickHandler);
+      document.removeEventListener('keydown', closeBigPicture);
+    };
+
+    var closeBigPicture = function (evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        bigPictureCloseClickHandler();
+      }
     };
 
     for (var i = 0; i < pictureImages.length; i++) {
       pictureImages[i].addEventListener('click', pictureClickHandler);
     }
 
-    bigPictureClose.addEventListener('click', bigPictureCloseClickHandler);
-    document.addEventListener('keydown', closeBigPicture);
+    for (i = 0; i < pictureImages.length; i++) {
+      imgLinks[i].addEventListener('keydown', openPreview);
+    }
   };
 })();
