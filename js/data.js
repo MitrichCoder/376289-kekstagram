@@ -3,29 +3,29 @@
 // ГЕНЕРАЦИЯ МАССИВА ОБЪЕКТОВ, ОПИСЫВАЮЩИХ ФОТОГРАФИИ
 (function () {
   window.data = {
-    photosArray: [],
+    photos: [],
     PHOTO_DISCRIPTION: ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья.\nНе обижайте всех словами......', 'Вот это тачка!']
   };
 
   // формирование нового массива обектов для фотографий
-  var onSuccess = function (dataArray) {
+  var onSuccess = function (newData) {
     // массив чисел в случайном порядке
-    var randomOrder = window.app.createArray(0, dataArray.length - 1).sort(function () {
+    var randomOrders = window.app.createArray(0, newData.length - 1).sort(function () {
       return Math.random() - 0.5;
     });
 
-    for (var i = 0; i < dataArray.length; i++) {
+    for (var i = 0; i < newData.length; i++) {
       var testPhoto = {
-        url: dataArray[randomOrder[i]].url,
-        likes: dataArray[randomOrder[i]].likes,
-        comments: dataArray[randomOrder[i]].comments,
+        url: newData[randomOrders[i]].url,
+        likes: newData[randomOrders[i]].likes,
+        comments: newData[randomOrders[i]].comments,
         description: window.app.getRandomElement(window.data.PHOTO_DISCRIPTION)
       };
 
-      window.data.photosArray.push(testPhoto);
+      window.data.photos.push(testPhoto);
     }
 
-    window.pictures(window.data.photosArray);
+    window.renderPictures(window.data.photos);
     window.preview();
   };
 

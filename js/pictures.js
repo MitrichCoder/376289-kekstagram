@@ -2,10 +2,10 @@
 
 // ОТРИСОВКА МИНИАТЮР
 (function () {
-  window.pictures = function (renderArray) {
+  window.renderPictures = function (miniatures) {
     // шаблоны пользовательских фотографий
     var pictureTemplate = document.querySelector('#picture').content;
-    var imgFilters = document.querySelector('.img-filters');
+    var imageFilters = document.querySelector('.img-filters');
 
     // пользовательские фотографии
     var pictureBlock = document.querySelector('.pictures');
@@ -21,11 +21,11 @@
     };
 
     // отрисовка созданных DOM-элементов в блок .pictures
-    for (var i = 0; i < renderArray.length; i++) {
-      window.app.fragment.appendChild(renderPictureElement(renderArray[i]));
+    for (var i = 0; i < miniatures.length; i++) {
+      window.app.fragment.appendChild(renderPictureElement(miniatures[i]));
     }
 
     pictureBlock.appendChild(window.app.fragment);
-    imgFilters.classList.remove('img-filters--inactive');
+    imageFilters.classList.remove('img-filters--inactive');
   };
 })();

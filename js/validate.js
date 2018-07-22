@@ -25,18 +25,18 @@
       return true;
     }
 
-    var errorsObj = {}; // сюда "складываем" ошибки
+    var errorsObject = {}; // сюда "складываем" ошибки
     var errorMessage = '';
 
     var hashtag = fieldHashtag.value.trim().toLowerCase(); // избавляемся от пробелов в начале и в конце, приводим к одному регистру
-    var hashTagArray = hashtag.split(' '); // делим значение поля с хэш-тегами на отдельные элементы (по пробелу)
+    var hashTags = hashtag.split(' '); // делим значение поля с хэш-тегами на отдельные элементы (по пробелу)
 
     // количество решёток в хэш-теге
-    var countHashtags = function (stringArray) {
+    var countHashtags = function (string) {
       var count = 0;
 
-      for (var j = 0; j < stringArray.length; j++) {
-        if (stringArray[j] === '#') {
+      for (var j = 0; j < string.length; j++) {
+        if (string[j] === '#') {
           count++;
         }
       }
@@ -62,42 +62,42 @@
     };
 
     // не больше ли 5 хэш-тегов?
-    if (hashTagArray.length > 5) {
-      errorsObj.error1 = 'Хэш-тегов больше пяти. ';
+    if (hashTags.length > 5) {
+      errorsObject.errorNumberOne = 'Хэш-тегов больше пяти. ';
     }
 
     // есть ли одинаковые хэщтеги?
-    if (findNotUnique(hashTagArray)) {
-      errorsObj.error2 = 'Есть одинаковые хэш-теги. ';
+    if (findNotUnique(hashTags)) {
+      errorsObject.errorNumberTwo = 'Есть одинаковые хэш-теги. ';
     }
 
     // проверяем каждый хэш-тег
-    for (var i = 0; i < hashTagArray.length; i++) {
+    for (var i = 0; i < hashTags.length; i++) {
       // есть ли решётка в начале?
-      if (hashTagArray[i][0] !== '#') {
-        errorsObj.error3 = 'Нет решётки в начале хэш-тега. ';
+      if (hashTags[i][0] !== '#') {
+        errorsObject.errorNumberThree = 'Нет решётки в начале хэш-тега. ';
       }
 
       // не из одной ли решётки?
-      if (hashTagArray[i].length === 1 && hashTagArray[i][0] === '#') {
-        errorsObj.error4 = 'Хэш-тег состоит из одной решётки. ';
+      if (hashTags[i].length === 1 && hashTags[i][0] === '#') {
+        errorsObject.errorNumberFour = 'Хэш-тег состоит из одной решётки. ';
       }
 
       // не больше ли 20 знаков
-      if (hashTagArray[i].length > 20) {
-        errorsObj.error5 = 'Хэш-тег больше 20 знаков. ';
+      if (hashTags[i].length > 20) {
+        errorsObject.errorNumberFive = 'Хэш-тег больше 20 знаков. ';
       }
 
       // разделяются ли хэш-теги пробелом?
-      if (countHashtags(hashTagArray[i]) > 1) {
-        errorsObj.error6 = 'Нет пробелов между хэш-тегами. ';
+      if (countHashtags(hashTags[i]) > 1) {
+        errorsObject.errorNumberSix = 'Нет пробелов между хэш-тегами. ';
       }
     }
 
     // формируем сообщение с ошибками
-    for (var key in errorsObj) {
-      if (errorsObj.hasOwnProperty(key)) {
-        errorMessage += errorsObj[key];
+    for (var key in errorsObject) {
+      if (errorsObject.hasOwnProperty(key)) {
+        errorMessage += errorsObject[key];
       }
     }
 

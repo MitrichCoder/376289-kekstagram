@@ -7,13 +7,13 @@
 
     // формирование массива целых чисел в заданном диапазоне (от...до, включительно)
     createArray: function (min, max) {
-      var arr = [];
+      var array = [];
 
       for (var i = min; i <= max; i++) {
-        arr.push(i);
+        array.push(i);
       }
 
-      return arr;
+      return array;
     },
 
     // случайное число в заданном диапазоне (от...до, включительно)
@@ -22,23 +22,23 @@
     },
 
     // получение случайного элемента массива
-    getRandomElement: function (arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
+    getRandomElement: function (array) {
+      return array[Math.floor(Math.random() * array.length)];
     },
 
     // получение массива определённого количества случайных чисел в заданном диапазоне
     getRandomArray: function (limit, min, max) {
-      var randomNums = [];
+      var randomNumbers = [];
 
-      while (randomNums.length !== limit) {
+      while (randomNumbers.length !== limit) {
         var num = window.app.randomInteger(min, max);
 
-        if (!randomNums.includes(num)) {
-          randomNums.push(num);
+        if (!randomNumbers.includes(num)) {
+          randomNumbers.push(num);
         }
       }
 
-      return randomNums;
+      return randomNumbers;
     },
 
     // случайное true или false

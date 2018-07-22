@@ -3,7 +3,7 @@
 (function () {
   var pictureBlock = document.querySelector('.pictures');
   var pictureTitle = document.querySelector('.pictures__title');
-  var imgUpload = document.querySelector('.img-upload');
+  var imageUpload = document.querySelector('.img-upload');
 
   var buttonPopular = document.querySelector('#filter-popular');
   var buttonNew = document.querySelector('#filter-new');
@@ -20,12 +20,12 @@
   };
 
   // перерисовка блока с фотографиями
-  var reRenderPicture = function (reRenderArray) {
+  var rebuildPicture = function (rebuilds) {
     pictureBlock.innerHTML = '';
     pictureBlock.appendChild(pictureTitle);
-    pictureBlock.appendChild(imgUpload);
+    pictureBlock.appendChild(imageUpload);
 
-    window.pictures(reRenderArray);
+    window.renderPictures(rebuilds);
     window.preview();
     setButtonStyle();
   };
@@ -33,8 +33,8 @@
   // фотографии в изначальном порядке
   var popularClickHandler = window.debounce(function () {
 
-    var popular = window.data.photosArray;
-    reRenderPicture(popular);
+    var populars = window.data.photos;
+    rebuildPicture(populars);
   });
 
   // 10 случайных, не повторяющихся фотографий
@@ -42,23 +42,23 @@
 
     var news = [];
 
-    var newsItems = window.app.getRandomArray(10, 0, window.data.photosArray.length - 1);
+    var newsItems = window.app.getRandomArray(10, 0, window.data.photos.length - 1);
 
     for (var i = 0; i < newsItems.length; i++) {
-      news.push(window.data.photosArray[newsItems[i]]);
+      news.push(window.data.photos[newsItems[i]]);
     }
 
-    reRenderPicture(news);
+    rebuildPicture(news);
   });
 
   // сортировка по самым обсуждаемым фотографиям (в порядке их убывания)
   var discussedClickHandler = window.debounce(function () {
 
-    var discussions = window.data.photosArray.slice().sort(function (less, more) {
+    var discussions = window.data.photos.slice().sort(function (less, more) {
       return more.comments.length - less.comments.length;
     });
 
-    reRenderPicture(discussions);
+    rebuildPicture(discussions);
   });
 
   buttonPopular.addEventListener('click', popularClickHandler);

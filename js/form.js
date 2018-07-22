@@ -14,9 +14,9 @@
   // редактор фотографии
   var uploadFile = document.querySelector('#upload-file');
   var imageEditor = document.querySelector('.img-upload__overlay');
-  var editorCloseBtn = document.querySelector('#upload-cancel');
+  var editorCloseButton = document.querySelector('#upload-cancel');
 
-  var imgPreview = document.querySelector('.img-upload__preview').getElementsByTagName('img')[0];
+  var imagePreview = document.querySelector('.img-upload__preview').getElementsByTagName('img')[0];
   var effectButtons = document.querySelectorAll('.effects__radio');
 
   var fieldHashtag = document.querySelector('.text__hashtags');
@@ -46,7 +46,7 @@
   // текущее (начальное) значение эффекта input radio checked
   var effectValue = String(document.querySelector('input[name="effect"]:checked').getAttribute('value'));
 
-  var effects = {
+  var Effects = {
     'chrome': {
       filterName: 'grayscale',
       minValue: 0,
@@ -106,7 +106,7 @@
 
   // "сброс" эффектов фотографии при смене эффекта, установка пина и масштаба фотографии в максимальное положение
   var resetEffectLevel = function () {
-    imgPreview.removeAttribute('style');
+    imagePreview.removeAttribute('style');
     setPinPosition(SCALE_START);
 
     // сброс масштаба фотографии
@@ -130,23 +130,23 @@
     }
 
     var effectClass = 'effects__preview--' + effectValue; // создание класса эффекта для фотографии
-    imgPreview.className = ''; // "чистим" атрибут class у тега img
-    imgPreview.classList.add(effectClass); // вставляем нужный класс
+    imagePreview.className = ''; // "чистим" атрибут class у тега img
+    imagePreview.classList.add(effectClass); // вставляем нужный класс
   };
 
   // изменение уровня эфекта фотографии
   var changeEffectLevel = function (level) {
-    var filterName = effects[effectValue]['filterName'];
+    var filterName = Effects[effectValue]['filterName'];
     // var minLevel = effects[effectValue]['minValue'];
-    var maxLevel = effects[effectValue]['maxValue'];
+    var maxLevel = Effects[effectValue]['maxValue'];
     var curentLevel = level * maxLevel / 100;
-    var unit = 'unit' in effects[effectValue] ? effects[effectValue]['unit'] : '';
+    var unit = 'unit' in Effects[effectValue] ? Effects[effectValue]['unit'] : '';
 
-    imgPreview.style.filter = filterName + '(' + curentLevel + unit + ')';
+    imagePreview.style.filter = filterName + '(' + curentLevel + unit + ')';
   };
 
   uploadFile.addEventListener('change', openImageEditor);
-  editorCloseBtn.addEventListener('click', window.form.closeImageEditor);
+  editorCloseButton.addEventListener('click', window.form.closeImageEditor);
 
   changeEffectHendler();
 
@@ -195,11 +195,11 @@
 
   var setResize = function (value) {
     resizeField.value = value + '%';
-    imgPreview.style.transform = 'scale(' + value * 0.01 + ')';
+    imagePreview.style.transform = 'scale(' + value * 0.01 + ')';
   };
 
   // изменение масштаба
-  var btnPlusClickHandler = function () {
+  var buttonPlusClickHandler = function () {
     if (resizeValue >= RESIZE_MAX) {
       return;
     }
@@ -208,7 +208,7 @@
     setResize(resizeValue);
   };
 
-  var btnMinusClickHandler = function () {
+  var buttonMinusClickHandler = function () {
     if (resizeValue <= RESIZE_MIN) {
       return;
     }
@@ -218,6 +218,6 @@
   };
 
   setResize(RESIZE_MAX);
-  resizePlus.addEventListener('click', btnPlusClickHandler);
-  resizeMinus.addEventListener('click', btnMinusClickHandler);
+  resizePlus.addEventListener('click', buttonPlusClickHandler);
+  resizeMinus.addEventListener('click', buttonMinusClickHandler);
 })();
